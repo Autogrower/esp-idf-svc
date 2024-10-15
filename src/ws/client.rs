@@ -1,6 +1,7 @@
 //! WebSocket client
 
 use core::{ffi, time};
+use std::string::String;
 
 extern crate alloc;
 use alloc::boxed::Box;
@@ -144,7 +145,10 @@ impl<'a> WebSocketEventType<'a> {
                         );
                         core::str::from_utf8(slice)
                     }
-                    .map_err(|_| EspError::from_infallible::<ESP_FAIL>().into())
+                    .map_err(|e| {
+                        println!("Second error: {e}");
+                        EspError::from_infallible::<ESP_FAIL>().into()
+                    })
                     .map(Self::Text),
                     // Binary frame
                     2 => Ok(Self::Binary(unsafe {
